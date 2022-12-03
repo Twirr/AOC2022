@@ -48,10 +48,10 @@ fn part2(original_data: Vec<String>){
 
     for group in groups{
         let set: HashSet<_> = group.0.chars().into_iter().collect();
-        let first_union: HashSet<char> = intersection(set, group.1.chars());
-        let second_union: HashSet<char> = intersection(first_union, group.2.chars());
+        let first_intersect: HashSet<char> = intersection(set, group.1.chars());
+        let second_intersect: HashSet<char> = intersection(first_intersect, group.2.chars());
         
-        sum+=to_prio(second_union);
+        sum+=to_prio(second_intersect);
     }
 
     println!("Result2: {}", sum);
@@ -67,9 +67,9 @@ fn intersection(set: HashSet<char>, chars: Chars<'_>) -> HashSet<char>{
     return union;
 }
 
-fn to_prio(union: HashSet<char>) -> u32{
+fn to_prio(set: HashSet<char>) -> u32{
     let mut sum = 0;
-    union.into_iter().for_each(|c| {
+    set.into_iter().for_each(|c| {
         let ascii = c as u32;
         if ascii > 95 { // a = 97 -> a = 1
             sum+= ascii-96;
