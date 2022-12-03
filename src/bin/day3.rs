@@ -30,7 +30,7 @@ fn part1(original_data: Vec<String>){
     for pair in pairs{
         
         let set: HashSet<_> = pair.0.chars().into_iter().collect();
-        let union = union(set, pair.1.chars());
+        let union = intersection(set, pair.1.chars());
         sum+=to_prio(union);
     }
     println!("Result1: {}", sum);
@@ -48,8 +48,8 @@ fn part2(original_data: Vec<String>){
 
     for group in groups{
         let set: HashSet<_> = group.0.chars().into_iter().collect();
-        let first_union: HashSet<char> = union(set, group.1.chars());
-        let second_union: HashSet<char> = union(first_union, group.2.chars());
+        let first_union: HashSet<char> = intersection(set, group.1.chars());
+        let second_union: HashSet<char> = intersection(first_union, group.2.chars());
         
         sum+=to_prio(second_union);
     }
@@ -57,7 +57,7 @@ fn part2(original_data: Vec<String>){
     println!("Result2: {}", sum);
 }
 
-fn union(set: HashSet<char>, chars: Chars<'_>) -> HashSet<char>{
+fn intersection(set: HashSet<char>, chars: Chars<'_>) -> HashSet<char>{
     let mut union: HashSet<char> = HashSet::new();
     chars.for_each(|c | {
         if set.contains(&c) {
