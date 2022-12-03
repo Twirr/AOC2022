@@ -30,8 +30,8 @@ fn part1(original_data: Vec<String>){
     for pair in pairs{
         
         let set: HashSet<_> = pair.0.chars().into_iter().collect();
-        let union = intersection(set, pair.1.chars());
-        sum+=to_prio(union);
+        let intersection = intersection(set, pair.1.chars());
+        sum+=to_prio(intersection);
     }
     println!("Result1: {}", sum);
 }
