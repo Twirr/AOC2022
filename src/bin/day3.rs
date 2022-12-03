@@ -58,13 +58,13 @@ fn part2(original_data: Vec<String>){
 }
 
 fn intersection(set: HashSet<char>, chars: Chars<'_>) -> HashSet<char>{
-    let mut union: HashSet<char> = HashSet::new();
+    let mut intersection: HashSet<char> = HashSet::new();
     chars.for_each(|c | {
         if set.contains(&c) {
-            union.insert(c);
+            intersection.insert(c);
         }
     });
-    return union;
+    return intersection;
 }
 
 fn to_prio(set: HashSet<char>) -> u32{
