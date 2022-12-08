@@ -55,8 +55,8 @@ fn main() -> io::Result<()> {
 
 fn part1(mut stacks:HashMap<String,Vec<char>>, operations:Vec<(String,String,u32)>){
     for operation in operations{
-        let mut from = stacks.get(&operation.0).unwrap().clone();
-        let mut to = stacks.get(&operation.1).unwrap().clone();
+        let mut from = stacks.remove(&operation.0).unwrap();
+        let mut to = stacks.remove(&operation.1).unwrap();
         for _ in 0..operation.2{
             to.push(from.pop().unwrap());
         }
@@ -76,8 +76,8 @@ fn part1(mut stacks:HashMap<String,Vec<char>>, operations:Vec<(String,String,u32
 fn part2(mut stacks:HashMap<String,Vec<char>>, operations:Vec<(String,String,u32)>){
 
     for operation in operations{
-        let mut from = stacks.get(&operation.0).unwrap().clone();
-        let mut to = stacks.get(&operation.1).unwrap().clone();
+        let mut from = stacks.remove(&operation.0).unwrap();
+        let mut to = stacks.remove(&operation.1).unwrap();
 
         let mut stack = Vec::new();
         for _ in 0..operation.2{

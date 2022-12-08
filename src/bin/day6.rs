@@ -11,34 +11,30 @@ fn main() -> io::Result<()> {
     println!("Running {}", program);
 
     let file = File::open("input_day6")?;
-    let mut headerFound = false;
+    let mut header_found = false;
     BufReader::new(file).lines().for_each(|line|{
         let all_the_chars = line.unwrap();
         for i in 0..all_the_chars.len(){
-            if !headerFound && validateHeader(&all_the_chars[i..i+4]){
+            if !header_found && validate_header(&all_the_chars[i..i+4]){
                 println!("Result1: {}",i+4);
-                headerFound = true;
+                header_found = true;
             }
 
-            if validateMessage(&all_the_chars[i..i+14]){
+            if validate_message(&all_the_chars[i..i+14]){
                 println!("Result2: {}",i+14);
                 break;
             }
         }
     });
-
-    part1();
-
-    part2();
     Ok(())
 }
 
-fn validateHeader(maybeeKey: &str ) -> bool{
-    let set = maybeeKey.chars().collect::<HashSet<char>>();
+fn validate_header(maybee_key: &str ) -> bool{
+    let set = maybee_key.chars().collect::<HashSet<char>>();
     return set.len() == 4;
 }
-fn validateMessage(maybeeKey: &str ) -> bool{
-    let set = maybeeKey.chars().collect::<HashSet<char>>();
+fn validate_message(maybee_key: &str ) -> bool{
+    let set = maybee_key.chars().collect::<HashSet<char>>();
     return set.len() == 14;
 }
 
