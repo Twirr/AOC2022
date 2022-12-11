@@ -1,6 +1,3 @@
-use core::iter::Map;
-use std::collections::HashMap;
-
 #[derive(Debug, Clone, Copy)]
 pub struct Interval{
     min: u32,
