@@ -40,3 +40,28 @@ impl Folder{
     }
 
 }
+pub struct Monkey{
+    items: Vec<i32>,
+    test: Test
+}
+
+impl Monkey{
+    fn new_monkey(new_item: Vec<i32>,  new_test: Test) -> Monkey{
+        return Monkey { items: new_item, test: new_test }
+    }
+
+}
+pub struct Test{
+    divide_by: i32,
+    if_true: i32,
+    if_false: i32
+}
+
+impl Test{
+    fn do_test(&self,input: i32) -> i32{
+        if input % self.divide_by == 0{
+            return self.if_true;
+        }
+        return self.if_false;
+    }
+}
