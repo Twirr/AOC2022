@@ -24,42 +24,67 @@ impl Interval{
 }
 #[derive(Debug, Clone,Copy)]
 pub struct Folder{
-    size_of_files: i64
+    size_of_files: u64
 }
 
 impl Folder{
     pub fn create_folder() -> Folder{
        return Folder {size_of_files: 0};
     }
-    pub fn add_file(&mut self,file_size: i64){
+    pub fn add_file(&mut self,file_size: u64){
         self.size_of_files += file_size;
     }
 
-    pub fn get_size(&self)->i64{
+    pub fn get_size(&self)->u64{
         return self.size_of_files;
     }
 
 }
+#[derive(Debug, Clone)]
 pub struct Monkey{
-    items: Vec<i32>,
-    test: Test
+    pub items: Vec<f64>,
+    pub value: f64,
+    pub function: fn(x: f64, y: f64) -> f64,
+    pub test: Test
+}
+#[derive(PartialEq)]
+pub enum Operator {
+    Add,
+    Multi
+}
+#[derive(PartialEq)]
+pub enum OtherOperator {
+    Value,
+    Me
 }
 
 impl Monkey{
-    fn new_monkey(new_item: Vec<i32>,  new_test: Test) -> Monkey{
-        return Monkey { items: new_item, test: new_test }
+    pub fn inspect(&self, worry_level: f64)-> f64{
+        return ((self.function)(worry_level,self.value) / 3.0).floor();
     }
-
+    pub fn inspect2(&self, worry_level: f64)-> f64{
+        return (self.function)(worry_level,self.value);
+    }
+    pub fn get_target(&self, worry_level: f64)-> i32{
+        return self.test.get_target(worry_level);
+    }
+    pub fn clear_items(&mut self){
+        self.items.clear();
+    }
+    pub fn add_item(&mut self, item: f64){
+        self.items.push(item);
+    }
 }
+#[derive(Debug, Clone)]
 pub struct Test{
-    divide_by: i32,
-    if_true: i32,
-    if_false: i32
+    pub divide_by: f64,
+    pub if_true: i32,
+    pub if_false: i32
 }
 
 impl Test{
-    fn do_test(&self,input: i32) -> i32{
-        if input % self.divide_by == 0{
+    fn get_target(&self, input: f64) -> i32{
+        if input % self.divide_by == 0.0{
             return self.if_true;
         }
         return self.if_false;
