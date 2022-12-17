@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap};
 use std::env;
 use std::fs::File;
 use std::io::{self, BufReader};
@@ -24,30 +24,31 @@ fn main() -> io::Result<()> {
 
     let items_regex = Regex::new(r"(?:, )?(\d+)+").unwrap();
 
+    let mut multiple = 1;
     for i in (0..input.len()).step_by(7){
         let monkey_number = input.get(i).unwrap();
         let starting = input.get(i+1).unwrap();
         let items = items_regex.captures_iter(starting).map(|c| {
-            let a = str::parse::<f64>(&c[1]).unwrap();
+            let a = str::parse::<u64>(&c[1]).unwrap();
             return a;
-        }).collect::<Vec<f64>>();
+        }).collect::<Vec<u64>>();
         let operation = input.get(i+2).unwrap();
         let operator = if operation.contains('+') { Operator::Add} else { Operator::Multi };
         let value;
         let other_operator;
         if NUMBER_REGEX.is_match(operation){
-            value = get_any_number(operation) as f64;
+            value = get_any_number(operation) as u64;
             other_operator = OtherOperator::Value;
         }else{
             other_operator = OtherOperator::Me;
-            value = 0.0;
+            value = 0;
         }
         let divide_by = input.get(i+3).unwrap();
-        get_any_number(divide_by);
+        multiple *= get_any_number(divide_by);
         let if_true = input.get(i+4).unwrap();
         let if_false = input.get(i+5).unwrap();
-        monkeys.insert(get_any_number(monkey_number), Monkey{items: items,
-            test: Test{divide_by: get_any_number(divide_by) as f64,if_true: get_any_number(if_true), if_false: get_any_number(if_false)}
+        monkeys.insert(get_any_number(monkey_number) as i32, Monkey{items: items,
+            test: Test{divide_by: get_any_number(divide_by) as u64,if_true: get_any_number(if_true) as i32, if_false: get_any_number(if_false) as i32}
             ,function: returns_closure(operator, other_operator), 
             value: value});
     }
@@ -55,11 +56,11 @@ fn main() -> io::Result<()> {
    
 
     part1(monkeys.clone());
-    part2(monkeys.clone());
+    part2(monkeys.clone(),multiple);
     Ok(())
 }
 
-fn returns_closure(a: Operator, b: OtherOperator) -> fn(x: f64, y: f64) -> f64 {
+fn returns_closure(a: Operator, b: OtherOperator) -> fn(x: u64, y: u64) -> u64 {
     if a == Operator::Multi && b == OtherOperator::Me{
         return |x, _y| x * x;
     }else if a == Operator::Multi && b == OtherOperator::Value {
@@ -70,7 +71,7 @@ fn returns_closure(a: Operator, b: OtherOperator) -> fn(x: f64, y: f64) -> f64 {
         return |x, _y| x + x;
     }
 }
-fn get_any_number(string: &String)-> i32{
+fn get_any_number(string: &String)-> u64{
     let a = NUMBER_REGEX.captures(string).unwrap();
     return a[1].parse().unwrap();
 }
@@ -78,17 +79,18 @@ fn get_any_number(string: &String)-> i32{
 
 fn part1(mut input: HashMap<i32,Monkey>){
     let mut result = HashMap::new();
-    for i  in 0..8{
+    let number_of_monkeys = input.len() as i32;
+    for i  in 0..number_of_monkeys{
         result.insert(i, 0);
     }   
     for _ in 0..20{
-        for i in 0..8{
+        for i in 0..number_of_monkeys{
             let mut monkey = input.get(&i).unwrap().clone();
-            let sum =result.get(&i).unwrap();
+            let sum =result.get(&i).unwrap().clone();
             result.insert(i, sum+monkey.items.len());
 
             for item in monkey.items.clone(){
-                let worry_level = monkey.inspect(item);
+                let worry_level = monkey.inspect(item) / 3;
                 let target = monkey.get_target(worry_level);
                 let mut target_monkey = input.get(&target).unwrap().clone();
                 target_monkey.add_item(worry_level);
@@ -104,20 +106,20 @@ fn part1(mut input: HashMap<i32,Monkey>){
 
     println!("Result1: {}", values.get(0).unwrap()*values.get(1).unwrap());
 }
-fn part2(mut input: HashMap<i32,Monkey>){
+fn part2(mut input: HashMap<i32,Monkey>, multiple: u64){
     let mut result = HashMap::new();
-    for i  in 0..8{
+    let number_of_monkeys = input.len() as i32;
+    for i  in 0..number_of_monkeys{
         result.insert(i, 0);
     }   
-    for round in 0..10000{
-        println!("Round: {}",round);
-        for i in 0..8{
+    for _round in 0..10000{
+        for i in 0..number_of_monkeys{
             let mut monkey = input.get(&i).unwrap().clone();
-            let sum =result.get(&i).unwrap();
+            let sum =result.get(&i).unwrap().clone();
             result.insert(i, sum+monkey.items.len());
 
             for item in monkey.items.clone(){
-                let worry_level = monkey.inspect2(item);
+                let worry_level = monkey.inspect(item) % multiple;
                 let target = monkey.get_target(worry_level);
                 let mut target_monkey = input.get(&target).unwrap().clone();
                 target_monkey.add_item(worry_level);

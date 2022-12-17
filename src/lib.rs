@@ -42,9 +42,9 @@ impl Folder{
 }
 #[derive(Debug, Clone)]
 pub struct Monkey{
-    pub items: Vec<f64>,
-    pub value: f64,
-    pub function: fn(x: f64, y: f64) -> f64,
+    pub items: Vec<u64>,
+    pub value: u64,
+    pub function: fn(x: u64, y: u64) -> u64,
     pub test: Test
 }
 #[derive(PartialEq)]
@@ -59,32 +59,29 @@ pub enum OtherOperator {
 }
 
 impl Monkey{
-    pub fn inspect(&self, worry_level: f64)-> f64{
-        return ((self.function)(worry_level,self.value) / 3.0).floor();
-    }
-    pub fn inspect2(&self, worry_level: f64)-> f64{
+    pub fn inspect(&self, worry_level: u64)-> u64{
         return (self.function)(worry_level,self.value);
     }
-    pub fn get_target(&self, worry_level: f64)-> i32{
+    pub fn get_target(&self, worry_level: u64)-> i32{
         return self.test.get_target(worry_level);
     }
     pub fn clear_items(&mut self){
         self.items.clear();
     }
-    pub fn add_item(&mut self, item: f64){
+    pub fn add_item(&mut self, item: u64){
         self.items.push(item);
     }
 }
 #[derive(Debug, Clone)]
 pub struct Test{
-    pub divide_by: f64,
+    pub divide_by: u64,
     pub if_true: i32,
     pub if_false: i32
 }
 
 impl Test{
-    fn get_target(&self, input: f64) -> i32{
-        if input % self.divide_by == 0.0{
+    fn get_target(&self, input: u64) -> i32{
+        if input % self.divide_by == 0{
             return self.if_true;
         }
         return self.if_false;
